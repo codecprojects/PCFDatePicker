@@ -1,6 +1,28 @@
 import {IInputs, IOutputs} from "./generated/ManifestTypes";
 
-export class DatePicker implements ComponentFramework.StandardControl<IInputs, IOutputs> {
+export class MonthPicker implements ComponentFramework.StandardControl<IInputs, IOutputs> {
+
+    // Value of the field is stored and used inside the control 
+    private _value: string;
+
+    // PCF framework delegate which will be assigned to this object which would be called whenever any update happens. 
+    private _notifyOutputChanged: () => void;
+
+    // label element created as part of this control
+    private labelElement: HTMLLabelElement;
+
+    // input element that is used to create the Month Picker
+    private inputElement: HTMLInputElement;
+
+    // Reference to the control container HTMLDivElement
+    // This element contains all elements of our custom control example
+    private _container: HTMLDivElement;
+
+    // Reference to ComponentFramework Context object
+    private _context: ComponentFramework.Context<IInputs>;
+
+    // Event Handelr 'refreshData' reference
+    private _refreshData: EventListenerOrEventListenerObject;
 
 	/**
 	 * Empty constructor.
@@ -20,8 +42,32 @@ export class DatePicker implements ComponentFramework.StandardControl<IInputs, I
 	 */
 	public init(context: ComponentFramework.Context<IInputs>, notifyOutputChanged: () => void, state: ComponentFramework.Dictionary, container:HTMLDivElement)
 	{
-		// Add control initialization code
+        this._context = context;
+        this._container = document.createElement("div");
+        this._notifyOutputChanged = notifyOutputChanged;
+        this._refreshData = this.refreshData.bind(this);
+
+        // creating HTML elements for the input type month and binding it to the function which refreshes the control data
+        this.inputElement = document.createElement("input");
+        this.inputElement.setAttribute("type", "month");
+        this.inputElement.addEventListener("input", this._refreshData);
+
+        //setting the id for the control.
+        this.inputElement.setAttribute("id", "monthpicker");
+
+        // appending the HTML elements to the control's HTML container element.
+        this._container.appendChild(this.inputElement);
+         container.appendChild(this._container);
 	}
+
+    /**
+      * Updates the values to the internal value variable we are storing 
+      * @param evt : The "Input Properties" containing the parameters, control metadata and interface functions
+      */
+    public refreshData(evt: Event): void {
+        this._value = (this.inputElement.value as any) as string;
+        this._notifyOutputChanged();
+    }
 
 
 	/**
@@ -30,7 +76,9 @@ export class DatePicker implements ComponentFramework.StandardControl<IInputs, I
 	 */
 	public updateView(context: ComponentFramework.Context<IInputs>): void
 	{
-		// Add code to update control view
+        this._value = context.parameters.value.raw;
+        this.inputElement.setAttribute("value", context.parameters.value.formatted ? context.parameters.value.formatted : "");
+
 	}
 
 	/** 
@@ -39,7 +87,10 @@ export class DatePicker implements ComponentFramework.StandardControl<IInputs, I
 	 */
 	public getOutputs(): IOutputs
 	{
-		return {};
+        return {
+            value: this._value
+
+        };
 	}
 
 	/** 
@@ -47,7 +98,8 @@ export class DatePicker implements ComponentFramework.StandardControl<IInputs, I
 	 * i.e. cancelling any pending remote calls, removing listeners, etc.
 	 */
 	public destroy(): void
-	{
-		// Add code to cleanup control if necessary
+    {
+        //Remove the event listener for input Element
+        this.inputElement.removeEventListener("input", this._refreshData);
 	}
 }

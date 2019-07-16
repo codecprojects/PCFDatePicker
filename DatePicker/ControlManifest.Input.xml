@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <manifest>
-  <control namespace="PCFControl" constructor="DatePicker" version="0.0.1" display-name-key="DatePicker_Display_Key" description-key="DatePicker_Desc_Key" control-type="standard">
+  <control namespace="PCFControl" constructor="MonthPicker" version="0.0.2" display-name-key="PCFControl.MonthPicker" description-key="Month Picker Control by Giles Forde" control-type="standard">
     <!-- property node identifies a specific, configurable piece of data that the control expects from CDS -->
-    <property name="sampleProperty" display-name-key="Property_Display_Key" description-key="Property_Desc_Key" of-type="SingleLine.Text" usage="bound" required="true" />
+    <property name="value" display-name-key="Month" description-key="Month" of-type="SingleLine.Text" usage="bound" required="true" />
     <!-- 
       Property node's of-type attribute can be of-type-group attribute. 
       Example:
@@ -16,22 +16,10 @@
     -->
     <resources>
       <code path="index.ts" order="1"/>
-      <!-- UNCOMMENT TO ADD MORE RESOURCES
-      <css path="css/DatePicker.css" order="1" />
-      <resx path="strings/DatePicker.1033.resx" version="1.0.0" />
+      <css path="css/MonthPicker.css" order="1" />
+      <!--
+      <resx path="strings/MonthPicker.1033.resx" version="1.0.0" />
       -->
     </resources>
-    <!-- UNCOMMENT TO ENABLE THE SPECIFIED API
-    <feature-usage>
-      <uses-feature name="Device.captureAudio" required="true" />
-      <uses-feature name="Device.captureImage" required="true" />
-      <uses-feature name="Device.captureVideo" required="true" />
-      <uses-feature name="Device.getBarcodeValue" required="true" />
-      <uses-feature name="Device.getCurrentPosition" required="true" />
-      <uses-feature name="Device.pickFile" required="true" />
-      <uses-feature name="Utility" required="true" />
-      <uses-feature name="WebAPI" required="true" />
-    </feature-usage>
-    -->
   </control>
 </manifest>
